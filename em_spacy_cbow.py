@@ -59,7 +59,7 @@ def optimize(model, data, word_to_ix, device):
         total_loss = 0
         for context, target in data:
 
-            context_idxs = make_context_vector(context, word_to_ix).to(device)
+            context_idxs = make_context_vector(context, word_to_ix, device)
 
             model.zero_grad()
 

@@ -1,9 +1,9 @@
 import torch
 
 
-def make_context_vector(context, word_to_ix):
+def make_context_vector(context, word_to_ix, device):
     idxs = [word_to_ix[w] for w in context]
-    return torch.tensor(idxs, dtype=torch.long)
+    return torch.tensor(idxs, dtype=torch.long).to(device)
 
 
 def clean_tokens(doc):
@@ -42,7 +42,7 @@ def text_head(num, data, model, word_to_ix, ix_to_word, device):
         i += 1
         if i > num:
             break
-        context_idxs = make_context_vector(context, word_to_ix).to(device)
+        context_idxs = make_context_vector(context, word_to_ix,device)
         pred_idx = torch.argmax(model(context_idxs)[0])
         pred_word = ix_to_word[pred_idx]
         err = 'XXXXXXXXX' if target != pred_word[1] else ''
