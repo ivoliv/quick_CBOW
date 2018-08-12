@@ -8,7 +8,7 @@ from utils import *
 import sys
 
 
-def read_and_setup(CORPUS_URL, CORPUS_START, CORPUS_SIZE, 
+def read_and_setup(CORPUS_URL, CORPUS_START, CORPUS_END, 
                    CONTEXT_SIZE, EMBEDDING_DIM, device):
 
     # Read corpus from url
@@ -17,7 +17,7 @@ def read_and_setup(CORPUS_URL, CORPUS_START, CORPUS_SIZE,
     http = urllib3.PoolManager()
     r = http.request('GET', CORPUS_URL)
     input_text = r.data.decode('utf-8')
-    input_text = input_text[CORPUS_START:CORPUS_SIZE]
+    input_text = input_text[CORPUS_START:CORPUS_END]
 
     # spacy processing of corpus
 
@@ -78,7 +78,7 @@ def main():
 
     CORPUS_URL = 'https://www.gutenberg.org/files/11/11-0.txt'
     CORPUS_START = 752
-    CORPUS_SIZE = 100000
+    CORPUS_END = 10000
     EPOCHS = 200
 
     # Check GPU availability
@@ -91,7 +91,8 @@ def main():
 
     # Read and optimize model
 
-    model, data, word_to_ix, ix_to_word = read_and_setup(device)
+    model, data, word_to_ix, ix_to_word = read_and_setup(CORPUS_URL, CORPUS_START, CORPUS_END,
+                                                         CONTEXT_SIZE, EMBEDDING_DIM, device)
     model, losses = optimize(model, data, word_to_ix, device, EPOCHS)
 
     #Outputs
