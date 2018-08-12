@@ -95,7 +95,7 @@ def main():
     #Outputs
 
     plot_losses(losses)
-    text_head(100, data, model, word_to_ix, ix_to_word)
+    text_head(100, data, model, word_to_ix, ix_to_word, device)
 
 
 if __name__ == '__main__':

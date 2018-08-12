@@ -36,13 +36,13 @@ def plot_losses(losses):
         print('No matplotlib - supressing losses plot.')
 
 
-def text_head(num, data, model, word_to_ix, ix_to_word):
+def text_head(num, data, model, word_to_ix, ix_to_word, device):
     i = 0
     for context, target in data:
         i += 1
         if i > num:
             break
-        context_idxs = make_context_vector(context, word_to_ix)
+        context_idxs = make_context_vector(context, word_to_ix).to(device)
         pred_idx = torch.argmax(model(context_idxs)[0])
         pred_word = ix_to_word[pred_idx]
         err = 'XXXXXXXXX' if target != pred_word[1] else ''
