@@ -9,8 +9,15 @@ import matplotlib.pyplot as plt
 
 nlp = spacy.load('en')
 
-CONTEXT_SIZE = 2
-EMBEDDING_DIM = 10
+CONTEXT_SIZE = 3
+EMBEDDING_DIM = 20
+
+if torch.cuda.is_available():
+    print('CUDA found')
+    device = torch.device('cuda:0')
+else:
+    device = torch.device('cpu')
+print('Using device:', device)
 
 
 # This version of CBOW has no hidden layers
@@ -46,14 +53,14 @@ class CBOW1(nn.Module):
 
 def make_context_vector(context, word_to_ix):
         idxs = [word_to_ix[w] for w in context]
-        return torch.tensor(idxs, dtype=torch.long)
+        return torch.tensor(idxs, dtype=torch.long).to(device)
 
 
 
 http = urllib3.PoolManager()
 r = http.request('GET', 'https://www.gutenberg.org/files/11/11-0.txt')
 
-test_sentence = r.data.decode('utf-8')[752:20000]
+test_sentence = r.data.decode('utf-8')[752:30000]
 doc = nlp(test_sentence)
 test_sentence = []
 
@@ -90,7 +97,7 @@ losses = []
 loss_function = nn.NLLLoss()
 optimizer = optim.SGD(model.parameters(), lr=0.001)
 
-for epoch in tqdm(range(300)):
+for epoch in tqdm(range(5)):
     total_loss = 0
     for context, target in data:
         
@@ -101,7 +108,7 @@ for epoch in tqdm(range(300)):
         log_probs = model(context_idxs)
         loss = loss_function(log_probs,
                              torch.tensor([word_to_ix[target]],
-                                          dtype=torch.long))
+                                          dtype=torch.long).to(device))
         
         loss.backward()
         optimizer.step()
