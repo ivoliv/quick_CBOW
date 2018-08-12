@@ -119,7 +119,7 @@ ix_to_word = [i for i in enumerate(vocab)]
 i = 0
 for context, target in data:
     i += 1
-    if i > 1000:
+    if i > 100:
         break
     context_idxs = make_context_vector(context, word_to_ix)
     pred_idx = torch.argmax(model(context_idxs)[0])
