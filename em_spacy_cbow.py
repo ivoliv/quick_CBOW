@@ -10,11 +10,12 @@ import sys
 # Set options
 
 CONTEXT_SIZE = 2
-EMBEDDING_DIM = 10
+EMBEDDING_DIM = 20
 
 CORPUS_URL = 'https://www.gutenberg.org/files/11/11-0.txt'
 CORPUS_START = 752
-CORPUS_SIZE = 10000
+CORPUS_SIZE = 100000
+EPOCHS = 200
 
 
 def read_and_setup(device):
@@ -55,7 +56,7 @@ def optimize(model, data, word_to_ix, device):
     loss_function = nn.NLLLoss()
     optimizer = optim.SGD(model.parameters(), lr=0.001)
 
-    for _ in tqdm(range(10)):
+    for _ in tqdm(range(EPOCHS)):
         total_loss = 0
         for context, target in data:
 
