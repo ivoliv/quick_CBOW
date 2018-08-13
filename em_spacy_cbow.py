@@ -7,18 +7,9 @@ from cbow_models import CBOW1
 from utils import *
 import sys
 
-# Set options
 
-CONTEXT_SIZE = 2
-EMBEDDING_DIM = 20
-
-CORPUS_URL = 'https://www.gutenberg.org/files/11/11-0.txt'
-CORPUS_START = 752
-CORPUS_SIZE = 100000
-EPOCHS = 200
-
-
-def read_and_setup(device):
+def read_and_setup(CORPUS_URL, CORPUS_START, CORPUS_END, 
+                   CONTEXT_SIZE, EMBEDDING_DIM, device):
 
     # Read corpus from url
 
@@ -26,7 +17,7 @@ def read_and_setup(device):
     http = urllib3.PoolManager()
     r = http.request('GET', CORPUS_URL)
     input_text = r.data.decode('utf-8')
-    input_text = input_text[CORPUS_START:CORPUS_SIZE]
+    input_text = input_text[CORPUS_START:CORPUS_END]
 
     # spacy processing of corpus
 
@@ -50,7 +41,7 @@ def read_and_setup(device):
     return model, data, word_to_ix, ix_to_word
 
 
-def optimize(model, data, word_to_ix, device):
+def optimize(model, data, word_to_ix, device, EPOCHS):
 
     losses = []
     loss_function = nn.NLLLoss()
@@ -79,6 +70,16 @@ def optimize(model, data, word_to_ix, device):
 
 
 def main():
+    
+    # Set options
+
+    CONTEXT_SIZE = 2
+    EMBEDDING_DIM = 20
+
+    CORPUS_URL = 'https://www.gutenberg.org/files/11/11-0.txt'
+    CORPUS_START = 752
+    CORPUS_END = 10000
+    EPOCHS = 200
 
     # Check GPU availability
 
@@ -90,8 +91,9 @@ def main():
 
     # Read and optimize model
 
-    model, data, word_to_ix, ix_to_word = read_and_setup(device)
-    model, losses = optimize(model, data, word_to_ix, device)
+    model, data, word_to_ix, ix_to_word = read_and_setup(CORPUS_URL, CORPUS_START, CORPUS_END,
+                                                         CONTEXT_SIZE, EMBEDDING_DIM, device)
+    model, losses = optimize(model, data, word_to_ix, device, EPOCHS)
 
     #Outputs
 
