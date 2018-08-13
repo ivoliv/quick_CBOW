@@ -45,7 +45,7 @@ def read_and_setup(device):
     print('Number of words (lemmas):', len_vocab)
     sys.stdout.flush()
 
-    model = CBOW1(len(vocab), EMBEDDING_DIM, CONTEXT_SIZE, device)
+    model = CBOW1(len(vocab), EMBEDDING_DIM, CONTEXT_SIZE).to(device)
 
     return model, data, word_to_ix, ix_to_word
 
